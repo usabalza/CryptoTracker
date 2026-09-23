@@ -1,4 +1,4 @@
-# 📈 Crypto Portfolio App
+# 📈 CryptoTracker App
 
 A native iOS mobile application developed in **SwiftUI** that allows users to seamlessly track their favorite cryptocurrencies in real-time, simulate currency conversions, and securely log buy/sell transactions locally.
 
@@ -8,7 +8,7 @@ The project consumes the **CoinGecko API** using its Free Demo Plan and implemen
 
 ## ✨ Key Features
 
-### 📱 Global Portfolio Screen
+### 📱 Global App Screen
 - **Consolidated Balance:** Total portfolio value in USD computed dynamically in real-time.
 - **Donut Allocation Chart:** Built natively with **Swift Charts** to showcase asset distribution percentages alongside a synchronized color-coded legend.
 - **Holdings List:** Direct navigation to your coin positions with reactive layout updates triggered by local database changes.
