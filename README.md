@@ -1,84 +1,112 @@
-# 📈 CryptoTracker App
+# 📱 CryptoTracker App
 
-A native iOS mobile application developed in **SwiftUI** that allows users to seamlessly track their favorite cryptocurrencies in real-time, simulate currency conversions, and securely log buy/sell transactions locally.
+[![Swift](https://shields.io)](https://swift.org)
+[![iOS](https://shields.io)](https://apple.com)
+[![SwiftUI](https://shields.io)](https://apple.com)
+[![SwiftData](https://shields.io)](https://apple.com)
+[![Architecture](https://shields.io)]()
 
-The project consumes the **CoinGecko API** using its Free Demo Plan and implements advanced mechanisms to protect against rate limiting (Error 429).
+### 📄 Description
+**CryptoTracker App** is a native iOS mobile application built to track favorite cryptocurrencies in real-time. The project implements live portfolio tracking, local trade simulations, and a robust defense strategy against API rate limiting. 
 
----
-
-## ✨ Key Features
-
-### 📱 Global App Screen
-- **Consolidated Balance:** Total portfolio value in USD computed dynamically in real-time.
-- **Donut Allocation Chart:** Built natively with **Swift Charts** to showcase asset distribution percentages alongside a synchronized color-coded legend.
-- **Holdings List:** Direct navigation to your coin positions with reactive layout updates triggered by local database changes.
-
-### 📊 Crypto Detail Screen
-- **Interactive Time-Series Chart:** Seamless switching between **1D**, **7D**, and **30D** timeframes. Features a smooth gradient fill (*AreaMark*) and an interactive *Tooltip* powered by drag gestures to scan exact historical prices.
-- **Market Metrics Grid:** Displays Market Cap, 24h Trading Volume, Circulating Supply, and All-Time Highs (ATH) formatted with professional, compact financial notation (e.g., `$1.2B`, `$45.3M`).
-- **Bidirectional Calculator:** Instant conversion between the crypto asset and USD utilizing field isolation (`@FocusState`) to completely eliminate cross-field typing bugs.
-
-### 💼 Transaction Ledger
-- **SwiftData Persistence:** Modern on-device storage for logging trades (Buy/Sell operations).
-- **Position Tracking:** Automatically computes token balances, net dollar exposure, average buy price, and real-time Profit & Loss (P&L).
-- **Native User Experience:** Sheet-based input modals and intuitive Swipe-to-Delete lists.
+This repository showcases production-ready architecture using modern Apple frameworks, focus-trapping UI validation, and financial-grade interactive charts.
 
 ---
 
-## 🛠️ Architecture and Tech Stack
+### 📸 UI/UX Preview
 
-The project strictly follows the **MVVM (Model-View-ViewModel)** architectural pattern, enforcing solid separation of concerns and modular user interface design:
-
-- **SwiftUI + Swift Charts:** For declarative layouts and fluid, financial-grade UI animations (iOS 17+).
-- **SwiftData:** For lightweight relational data persistence without heavy CoreData boilerplate.
-- **Concurrency (Async/Await):** Modern thread management for parallel network requests without locking the UI.
-- **Dependency Injection:** SOLID principles applied by decoupling the generic network client (`NetworkManager`) from domain-specific operations (`APIServices`).
+| Crypto List | Crypto Analytics | Transaction Ledger | Global Graphic |
+| ---------------- | ---------------- | ------------------ | ------------------ |
+| <img width="220" alt="Simulator Screenshot - iPhone 17 Pro - 2026-09-24 at 14 10 49" src="https://github.com/user-attachments/assets/4d5e2933-9011-4e2a-80aa-30107db55769" /> | <img width="220" alt="Simulator Screenshot - iPhone 17 Pro - 2026-09-24 at 14 11 00" src="https://github.com/user-attachments/assets/43d27f75-92b7-4464-be00-48323ffe0d4d" /> | <img width="220" alt="Simulator Screenshot - iPhone 17 Pro - 2026-09-24 at 14 11 16" src="https://github.com/user-attachments/assets/6fd9a04b-bc8e-431a-b222-d57d121fe83a" /> | <img width="220" alt="Simulator Screenshot - iPhone 17 Pro - 2026-09-24 at 14 53 34" src="https://github.com/user-attachments/assets/e578bbb0-d011-4295-b911-9242a16c80fa" /> |
 
 ---
 
-## ⚙️ Setup and Installation
+### ⚙️ Core Architecture & Key Concepts
 
-### Prerequisites
-- **Xcode 15.0** or higher.
-- **iOS 17.0** or higher on your testing device or simulator.
-- A free CoinGecko API Demo Plan key.
+*   **MVVM Architecture:** Solid separation of concerns. ViewModels manage reactive UI state transitions while keeping business logic decoupled from the layout.
+*   **Dependency Injection:** Enforces SOLID principles by fully decoupling the generic networking layer (`NetworkManager`) from domain-specific actions (`APIServices`).
+*   **Modern Concurrency:** Native integration of `async/await` for parallel, non-blocking HTTP requests.
+*   **Reactive Persistence:** Powered by **SwiftData** to handle on-device relational storage with seamless view updates triggered by database changes.
 
-### Quick Start
-1. Clone this repository to your local machine:
+---
+
+### 📦 Application Modules
+
+#### 📊 1. Global Dashboard
+*   **Consolidated Balance:** Live portfolio value calculation in USD computed dynamically.
+*   **Donut Allocation Chart:** Built with **Swift Charts** to showcase asset distribution alongside a synchronized color-coded legend.
+*   **Reactive Holdings:** Direct navigation to active coin positions with auto-updating list states.
+
+#### 📈 2. Crypto Analytics & Detail
+*   **Time-Series Charts:** Interactive historical price tracking across **1D**, **7D**, and **30D** timeframes utilizing custom gradient fills (`AreaMark`).
+*   **Gesture Tooltip:** Drag-gestures enabled to scan exact price entries and historical timestamps.
+*   **Market Metrics Grid:** Clear presentation of Market Cap, Volume, Supply, and ATH formatted with compact financial notation (e.g., `$1.2B`).
+*   **Bidirectional Calculator:** Bug-free currency conversion using isolated `@FocusState` inputs.
+
+#### 💼 3. Transaction Ledger & Math Engine
+*   **Trade Logging:** Local logging of Buy/Sell operations backed by SwiftData models.
+*   **Position Tracker:** Automated tracking for token balances, net dollar exposure, average buy price, and real-time Profit & Loss (P&L).
+*   **Native UX:** Intuitive sheet-based modal inputs and responsive swipe-to-delete flows.
+
+---
+
+### 🛡️ Rate Limiting Strategy (Error 429 Mitigation)
+To prevent hitting limits on CoinGecko's Free Demo Plan (100 calls/min), the architecture integrates a three-tier mitigation system:
+1.  **Segmented Memory Caching:** `APIServices` caches chart and market metrics for 5 minutes via composite dictionary keys (e.g., `"bitcoin-7D"`).
+2.  **Bulk-Group Queries:** The main dashboard groups multiple assets into unified query strings (`/coins/markets?ids=bitcoin,ethereum`), preventing sequential request spam.
+3.  **Explicit Interception:** Catches HTTP Status 429 globally in the network pipeline to trigger user-friendly UI degradation gracefully.
+
+---
+
+### 🧪 Automated Testing Suite
+The application includes a comprehensive test suite validating both logic accuracy and user interactions:
+
+*   **Unit Tests (`XCTest`):** Verifies portfolio math formulas, cache expiration rules, and financial formatting extensions. Leverages a protocol-based `MockNetworkManager` for isolated environment testing.
+*   **UI Tests (`XCUIApplication`):** Simulates keyboard input on conversion fields to guarantee focus-trapping behaviors work seamlessly.
+
+To run the complete test suite, open Xcode and hit `CMD + U`.
+
+---
+
+### 🛠️ Tech Stack
+
+*   **Language:** Swift 5.10+ (`async/await`)
+*   **UI Framework:** SwiftUI (iOS 17.0+ Minimum Target)
+*   **Data Visualization:** Swift Charts
+*   **Persistence Layer:** SwiftData
+*   **Networking:** URLSession (CoinGecko API)
+*   **Testing Framework:** XCTest / XCUITest
+
+---
+
+### 🚀 Getting Started
+
+#### Prerequisites
+*   Xcode 15.0 or higher.
+*   iOS 17.0+ Simulator or physical device.
+*   A free CoinGecko API Demo Key.
+
+#### Quick Start
+1. Clone this repository:
    ```bash
    git clone https://github.com
    ```
-2. Open the project in Xcode by double-clicking the `.xcodeproj` file.
-3. Navigate to the `NetworkManager` class inside the Networking layer.
-4. Replace the placeholder value of the `apiKey` variable with your private CoinGecko credentials:
+2. Open the project root directory and launch the Xcode project:
+   ```bash
+   cd CryptoTracker
+   open CryptoTracker.xcodeproj
+   ```
+3. Open `NetworkManager.swift` and replace the placeholder API key with your own:
    ```swift
    private let apiKey = "YOUR_API_KEY_HERE"
    ```
-5. Select a simulator (e.g., iPhone 15 Pro) and press **`⌘ + R`** to compile and launch the application.
+4. Choose an iOS 17.0+ simulator target and press `CMD + R` to build and run.
 
 ---
 
-## 🛡️ Rate Limiting Strategy (Error 429)
+### 👨‍💻 Author
 
-Since CoinGecko's Free Demo Plan limits requests to 100 calls per minute, this app implements a three-tier mitigation system:
-1. **Segmented Memory Caching:** `APIServices` caches chart and market responses for 5 minutes using composite dictionary keys (e.g., `"bitcoin-7D"`).
-2. **Bulk-Group Peticiones:** The main portfolio dashboard unifies multiple holdings into a single query string (`/coins/markets?ids=bitcoin,ethereum,solana`), avoiding sequential HTTP calls.
-3. **Explicit Error Handling:** Intercepts status code 429 globally within the generic network manager to gracefully alert the user.
-
----
-
-## 🧪 Unit and UI Testing
-
-The application includes a comprehensive automated test suite:
-
-- **Unit Tests (`XCTest`):** Validate the accuracy of portfolio balance math, cache expiration logic, and `Double` formatting extensions. Uses a protocol-based `MockNetworkManager` to isolate the app from actual internet connections.
-- **UI Tests (`XCUIApplication`):** Simulate actual user keyboard input on the currency converter fields to ensure responsive focus and focus-trapping behavior.
-
-To run the entire test suite inside Xcode, use the keyboard shortcut **`⌘ + U`**.
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License. See the `LICENSE` file for more details.
-
+Developed by **Your Name**
+*   **LinkedIn:** [Your Profile](https://linkedin.com)
+*   **Portfolio:** [Your Website](https://yourwebsite.com)
+*   **Email:** your.email@example.com
