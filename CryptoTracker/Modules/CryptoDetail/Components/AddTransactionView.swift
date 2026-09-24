@@ -77,7 +77,7 @@ struct AddTransactionView: View {
         }
         .onAppear {
             // Auto-rellenar con el precio actual de CoinGecko
-            priceString = currentPrice.toCurrency()
+            priceString = String(format: "%.2f", currentPrice)
         }
     }
     
