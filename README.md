@@ -106,7 +106,7 @@ To run the complete test suite, open Xcode and hit `CMD + U`.
 
 ### 👨‍💻 Author
 
-Developed by **Your Name**
-*   **LinkedIn:** [Your Profile](https://linkedin.com)
-*   **Portfolio:** [Your Website](https://yourwebsite.com)
-*   **Email:** your.email@example.com
+Developed by **Uziel Sabalza**
+*   **LinkedIn:** [Uziel Sabalza](https://linkedin.com)
+*   **Portfolio:** [Portafolio](https://yourwebsite.com)
+*   **Email:** uziel.sabalza.dev@gmail.com
